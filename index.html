@@ -343,7 +343,6 @@
   /* Section becomes tall to allow scroll-locked transformation */
   .time-section[data-scroll-section] {
     --p: 0;
-    min-height: 160vh;
     padding: 96px 0 96px;
     position: relative;
   }
@@ -352,13 +351,14 @@
   .time-section .section-head { margin-bottom: 0; }
 
   /* Sticky stage holds the morphing timeline centered as user scrolls past */
+  .time-sticky-wrap {
+    height: 130vh;
+    position: relative;
+  }
+
   .time-stage {
     position: sticky;
     top: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     padding: 96px 0 48px;
   }
 
@@ -503,6 +503,9 @@
       padding: 96px 0;
       --p: 1;
     }
+
+    .time-sticky-wrap { height: auto; }
+    .time-stage { position: static; padding: 0; }
     .time-stage {
       position: static;
       height: auto;
@@ -1036,7 +1039,8 @@
 <!-- TIME VISUALIZATION -->
 <section class="time-section" data-scroll-section aria-labelledby="time-title">
   <div class="container">
-<div class="time-stage">
+<div class="time-sticky-wrap">
+      <div class="time-stage">
       <div class="section-head">
       <p class="figure-eyebrow">Figure 01</p>
       <h2 id="time-title" class="h2">The day, redrawn.</h2>
@@ -1078,6 +1082,7 @@
           <span><span class="swatch swatch-reclaim"></span>Reclaimed time</span>
         </div>
       </div>
+    </div>
     </div>
 
     <div class="time-text-grid">
@@ -1509,13 +1514,16 @@
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function(){
-        var rect = section.getBoundingClientRect();
-        var vh = window.innerHeight;
-        // Active scroll range = section.height - vh; morph completes at ~80% so sticky releases with breathing room before next block.
-        var activeRange = section.offsetHeight - vh;
-        var scrolled = -rect.top;
-        var raw = activeRange > 0 ? scrolled / activeRange : 0;
-        var p = raw / 0.80;
+        // Tie morph progress to the sticky wrap (not the section), so morph completes
+        // EXACTLY when sticky releases. activeRange = wrap.height - stage.height.
+        var wrap = section.querySelector('.time-sticky-wrap');
+        var stage = section.querySelector('.time-stage');
+        if (!wrap || !stage) { ticking = false; return; }
+        var wrapRect = wrap.getBoundingClientRect();
+        var stageH = stage.getBoundingClientRect().height;
+        var activeRange = wrap.offsetHeight - stageH;
+        var scrolled = -wrapRect.top;
+        var p = activeRange > 0 ? scrolled / activeRange : 0;
         setMorph(Math.max(0, Math.min(1, p)));
         ticking = false;
       });
