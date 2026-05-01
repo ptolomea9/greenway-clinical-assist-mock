@@ -1,0 +1,1406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Greenway Clinical Assist | Ambient AI documentation for ambulatory practices</title>
+<meta name="description" content="Greenway Clinical Assist drafts the visit note while clinicians focus on the patient. Ambient AI documentation built for ambulatory practices on Intergy and Prime Suite." />
+
+<!-- ANALYTICS PLACEHOLDER: Greenway GA4 (G-XXXX) -->
+<!-- ANALYTICS PLACEHOLDER: Marketo Munchkin (xxx-xxx-xxx) -->
+<!-- ANALYTICS PLACEHOLDER: Google Ads conversion linker (AW-XXXX) -->
+<!-- ANALYTICS PLACEHOLDER: LinkedIn Insight Tag (xxxxxx) -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink:        #1B2538;
+    --text:       #363749;
+    --accent:     #0CAB7D;
+    --paper:      #FFFFFF;
+    --paper-alt:  #F4F4F1;
+    --rule:       rgba(27, 37, 56, 0.10);
+    --rule-strong:rgba(27, 37, 56, 0.20);
+
+    --serif: 'Gelasio', 'Georgia', serif;
+    --sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --container: 1200px;
+    --gutter: 32px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    font-feature-settings: "kern" 1, "onum" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img, svg { max-width: 100%; display: block; }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Skip link */
+  .skip {
+    position: absolute; left: -9999px; top: 8px;
+    background: var(--ink); color: var(--paper);
+    padding: 12px 16px; border-radius: 4px;
+    font-family: var(--sans); font-size: 14px; font-weight: 500;
+    z-index: 1000;
+  }
+  .skip:focus { left: 16px; }
+
+  .container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  /* ---------- Type primitives ---------- */
+  .display {
+    font-family: var(--serif);
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.018em;
+    line-height: 0.96;
+    margin: 0;
+  }
+  .h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    line-height: 1.04;
+    margin: 0;
+  }
+  .deck {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.45;
+    margin: 0;
+  }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+  .figure-eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(54, 55, 73, 0.5);
+    margin: 0;
+  }
+  .caption {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .small-caps {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .hairline-80 {
+    width: 64px; height: 1px;
+    background: var(--ink);
+    opacity: 0.45;
+    margin: 0 0 24px 0;
+  }
+  .hairline {
+    height: 1px;
+    background: var(--rule);
+    border: 0;
+    margin: 0;
+  }
+  .section-rule {
+    height: 1px;
+    background: var(--rule);
+    margin: 0;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    padding: 16px 32px;
+    border-radius: 999px;
+    border: 0;
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover {
+    background: #2c3a55;
+    text-decoration: none;
+  }
+  .btn-onink {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .btn-onink:hover { background: #ebebe6; text-decoration: none; }
+
+  .btn-block { display: block; width: 100%; text-align: center; }
+
+  .text-link {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* ---------- Header ---------- */
+  .site-header {
+    position: sticky; top: 0; z-index: 100;
+    height: 80px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-header .container {
+    height: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .wordmark {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    text-decoration: none;
+  }
+  .wordmark .dot { color: var(--accent); }
+  .header-phone {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .header-phone:hover { color: var(--accent); text-decoration: none; }
+
+  /* ---------- Hero ---------- */
+  .hero { background: var(--paper); padding: 96px 0 96px; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .hero-right { align-self: start; }
+  .hero h1.display {
+    font-size: clamp(56px, 7vw, 112px);
+  }
+  .hero h1.display em {
+    font-style: italic;
+    font-weight: 400;
+  }
+  .hero-deck {
+    font-size: 22px;
+    max-width: 580px;
+    margin-top: 32px;
+  }
+  .hero-bullets {
+    list-style: none;
+    margin: 40px 0 0 0;
+    padding: 0;
+  }
+  .hero-bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .hero-bullets li:last-child { margin-bottom: 0; }
+  .check-icon {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    margin-top: 2px;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .hero-cta-row {
+    margin-top: 48px;
+    display: flex; align-items: center; gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  /* Hero form card */
+  .form-card {
+    background: var(--paper-alt);
+    padding: 48px;
+    border-radius: 8px;
+  }
+  .form-card .eyebrow {
+    color: var(--ink);
+    opacity: 0.6;
+    font-size: 11px;
+  }
+  .form-card h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--ink);
+    margin: 16px 0 32px 0;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .form-grid {
+    display: grid; gap: 24px;
+  }
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(54, 55, 73, 0.6);
+  }
+  .field input, .field select {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 0;
+    padding: 14px 16px;
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--text);
+    width: 100%;
+    transition: border-color 200ms ease;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--ink);
+  }
+  .form-card .btn { margin-top: 8px; }
+  .form-card-foot {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: rgba(54, 55, 73, 0.6);
+    margin-top: 24px;
+    line-height: 1.55;
+  }
+
+  /* ---------- Section primitives ---------- */
+  section { padding: 96px 0; }
+  .section-head { margin-bottom: 64px; }
+  .section-head .figure-eyebrow { margin-bottom: 24px; }
+  .section-head .h2 { font-size: clamp(40px, 5vw, 56px); margin-bottom: 24px; }
+  .section-head .caption { max-width: 640px; }
+
+  /* Time visualization */
+  .time-section { background: var(--paper); }
+  .time-viz {
+    margin: 64px 0 80px;
+  }
+  .timeline-block { margin-bottom: 64px; }
+  .timeline-block:last-child { margin-bottom: 0; }
+  .timeline-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .timeline-label .label-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .timeline-svg {
+    width: 100%;
+    height: 64px;
+    display: block;
+  }
+  .legend {
+    display: flex; flex-wrap: wrap;
+    gap: 16px 32px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--text);
+    letter-spacing: 0.04em;
+  }
+  .legend .swatch {
+    display: inline-block;
+    width: 12px; height: 12px;
+    margin-right: 16px;
+    vertical-align: -1px;
+  }
+  .swatch-visit { background: var(--ink); }
+  .swatch-doc { background: var(--accent); opacity: 0.25; }
+  .swatch-reclaim { background: var(--accent); }
+
+  .time-text-grid {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 64px;
+    margin-top: 80px;
+    align-items: start;
+  }
+  .insight-pull {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.5;
+    color: var(--text);
+    margin: 0;
+  }
+  .workflow-rows { border-top: 1px solid var(--rule); }
+  .workflow-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 24px;
+    align-items: baseline;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .workflow-row .small-caps { color: var(--text); opacity: 0.7; }
+  .workflow-row .row-value {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  /* ROI calculator */
+  .roi-section { background: var(--paper-alt); }
+  .roi-wrap { max-width: 880px; margin: 0 auto; text-align: left; }
+  .roi-wrap .section-head { text-align: left; margin-bottom: 48px; }
+
+  .roi-panel {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 64px;
+  }
+  .roi-inputs { display: flex; flex-direction: column; }
+  .roi-input-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1.6fr 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .roi-input-row:first-child { padding-top: 0; }
+  .roi-input-row:last-of-type { border-bottom: 1px solid var(--rule); }
+  .roi-input-row .small-caps { color: var(--text); opacity: 0.8; }
+  .stepper {
+    display: inline-flex; align-items: center; gap: 12px;
+    justify-self: center;
+  }
+  .stepper button {
+    width: 32px; height: 32px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 0;
+    line-height: 1;
+    padding: 0;
+    transition: border-color 150ms ease, background 150ms ease;
+  }
+  .stepper button:hover { border-color: var(--ink); background: var(--paper-alt); }
+  .stepper input {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 36px;
+    color: var(--ink);
+    width: 96px;
+    border: 0;
+    text-align: center;
+    background: transparent;
+    -moz-appearance: textfield;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    padding: 0;
+  }
+  .stepper input::-webkit-outer-spin-button,
+  .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .stepper input:focus { outline: none; }
+  .roi-unit {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text);
+    text-align: right;
+  }
+
+  .roi-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+  }
+  .roi-result {
+    padding: 0 16px;
+    text-align: left;
+    border-right: 1px solid var(--rule);
+    min-width: 0;
+    overflow: visible;
+  }
+  .roi-result .small-caps {
+    letter-spacing: 0.12em;
+    font-size: 10px;
+  }
+  .roi-result:first-child { padding-left: 0; }
+  .roi-result:last-child { padding-right: 0; border-right: 0; }
+  .roi-result .small-caps {
+    color: var(--text); opacity: 0.7;
+    display: block;
+    margin-bottom: 16px;
+  }
+  .roi-result .big-num {
+    font-family: var(--serif);
+    font-weight: 400;
+    color: var(--accent);
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    display: block;
+    margin-bottom: 12px;
+    white-space: nowrap;
+  }
+  .roi-result .roi-unit-line {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .roi-disclaimer {
+    margin-top: 32px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 11px;
+    color: rgba(54, 55, 73, 0.5);
+    line-height: 1.55;
+  }
+
+  /* Adjacent themes */
+  .themes-section { background: var(--paper); }
+  .themes-head {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 64px;
+    align-items: end;
+    margin-bottom: 80px;
+  }
+  .themes-head .h2 { font-size: clamp(36px, 4.2vw, 48px); }
+  .themes-head .deck { font-size: 18px; }
+
+  .themes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .theme {
+    padding: 0 16px 0 32px;
+    border-left: 1px solid var(--rule);
+    min-height: 100%;
+  }
+  .theme:last-child { padding-right: 0; }
+  .theme-icon {
+    width: 24px; height: 24px;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    fill: none;
+    margin-bottom: 24px;
+  }
+  .theme h3 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--ink);
+    margin: 0 0 16px 0;
+    line-height: 1.3;
+  }
+  .theme p {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+  }
+  .theme a {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Pull quote */
+  .quote-section {
+    background: var(--paper-alt);
+    padding: 128px 0;
+  }
+  .quote-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    padding-left: 0;
+  }
+  .quote-wrap blockquote { margin: 0; padding: 0; }
+  .quote-mark {
+    position: absolute;
+    top: -64px; left: -96px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 200px;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.25;
+    pointer-events: none;
+    user-select: none;
+  }
+  .quote-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.35;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.012em;
+    text-indent: 0;
+  }
+  .quote-attr-rule {
+    width: 60px; height: 1px;
+    background: var(--rule-strong);
+    margin: 48px 0 24px 0;
+    border: 0;
+  }
+  .quote-attr {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  /* Final CTA */
+  .cta-band {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 96px 0;
+  }
+  .cta-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .cta-band .h2 {
+    color: var(--paper);
+    font-size: clamp(40px, 5vw, 64px);
+    margin-bottom: 24px;
+  }
+  .cta-band .deck {
+    color: var(--paper);
+    opacity: 0.8;
+    font-size: 22px;
+    margin-bottom: 48px;
+  }
+
+  /* Footer */
+  .site-footer {
+    background: var(--paper);
+    padding: 64px 0 32px;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: end;
+    margin-bottom: 64px;
+  }
+  .footer-desc {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text);
+    text-align: right;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+  .footer-col h4 {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 16px 0;
+  }
+  .footer-col ul { list-style: none; padding: 0; margin: 0; }
+  .footer-col li { margin-bottom: 8px; }
+  .footer-col a {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .footer-col a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+  .footer-bottom {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-bottom .copy {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: rgba(54, 55, 73, 0.55);
+  }
+  .footer-bottom .legal-links {
+    display: flex; gap: 24px;
+  }
+  .footer-bottom .legal-links a {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: rgba(54, 55, 73, 0.55);
+    text-decoration: none;
+  }
+  .footer-bottom .legal-links a:hover { color: var(--accent); }
+
+  /* Motion */
+  .anim-in {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .anim-in.is-in { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .anim-in { opacity: 1; transform: none; }
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    section { padding: 64px 0; }
+    .hero { padding: 48px 0 64px; }
+    .hero-grid,
+    .time-text-grid,
+    .themes-head,
+    .footer-top { grid-template-columns: 1fr; gap: 48px; }
+    .themes-grid { grid-template-columns: 1fr 1fr; gap: 48px 0; }
+    .theme { padding-right: 16px; }
+    .footer-cols { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-desc { text-align: left; }
+    .roi-panel { padding: 32px; }
+    .roi-input-row { grid-template-columns: 1fr; gap: 12px; text-align: left; }
+    .stepper { justify-self: start; }
+    .roi-unit { text-align: left; }
+    .roi-results { grid-template-columns: 1fr; gap: 24px; padding-top: 24px; }
+    .roi-result { border-right: 0; border-bottom: 1px solid var(--rule); padding: 24px 0; }
+    .roi-result:first-child { padding-top: 0; }
+    .roi-result:last-child { border-bottom: 0; padding-bottom: 0; }
+    .roi-result .big-num { font-size: 48px; }
+    .quote-section { padding: 80px 0; }
+    .quote-mark { left: -8px; top: -32px; font-size: 120px; }
+    .quote-text { font-size: 24px; }
+    .cta-band { padding: 64px 0; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#demo-form" class="skip">Skip to demo form</a>
+
+<!-- HEADER -->
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="#" class="wordmark" aria-label="Greenway Health">
+      greenway<span class="dot">.</span>
+    </a>
+    <a href="tel:18774482779" class="header-phone">1.877.448.2779</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="anim-in" data-stagger="0">
+          <div class="hairline-80"></div>
+          <p class="eyebrow">Clinical Assist &middot; Powered by Nabla</p>
+        </div>
+
+        <h1 id="hero-title" class="display anim-in" data-stagger="1" style="margin-top: 32px;">
+          Give your clinicians <em>2.5</em> hours back.
+        </h1>
+
+        <p class="deck hero-deck anim-in" data-stagger="2">
+          Greenway Clinical Assist drafts the visit note while the clinician focuses on the patient. Ambient AI documentation built for ambulatory practices on Intergy and Prime Suite.
+        </p>
+
+        <ul class="hero-bullets anim-in" data-stagger="3">
+          <li>
+            <svg class="check-icon" viewBox="0 0 18 18" aria-hidden="true"><polyline points="3 9 7 13 15 5"></polyline></svg>
+            <span>Structured SOAP notes drafted in real time, ready before the patient leaves the room.</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 18 18" aria-hidden="true"><polyline points="3 9 7 13 15 5"></polyline></svg>
+            <span>ICD-10 and E/M code suggestions surfaced from the visit conversation.</span>
+          </li>
+          <li>
+            <svg class="check-icon" viewBox="0 0 18 18" aria-hidden="true"><polyline points="3 9 7 13 15 5"></polyline></svg>
+            <span>Built into Intergy and Prime Suite. No new tab, no copy-paste, no second login.</span>
+          </li>
+        </ul>
+
+        <div class="hero-cta-row anim-in" data-stagger="4">
+          <a href="#demo-form" class="btn btn-primary">See it in your workflow</a>
+          <a href="#video" class="text-link">Or watch the 90-second demo</a>
+        </div>
+      </div>
+
+      <aside class="hero-right anim-in" data-stagger="5" aria-label="Request a demo">
+        <div class="form-card" id="demo-form">
+          <p class="eyebrow">Request a Demo</p>
+          <h3>See Clinical Assist in your specialty</h3>
+
+          <form class="form-grid" id="lead-form" novalidate>
+            <div class="field">
+              <label for="f-name">Full name</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-email">Work email</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="f-practice">Practice name</label>
+              <input id="f-practice" name="practice" type="text" autocomplete="organization" required>
+            </div>
+            <div class="field">
+              <label for="f-specialty">Specialty</label>
+              <select id="f-specialty" name="specialty" required>
+                <option value="">Select your specialty</option>
+                <option>Primary Care</option>
+                <option>Cardiology</option>
+                <option>Orthopedics</option>
+                <option>OB/GYN</option>
+                <option>Endocrinology</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-providers">Number of providers</label>
+              <input id="f-providers" name="providers" type="number" min="1" inputmode="numeric" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Show me Clinical Assist</button>
+            <p class="form-card-foot">By submitting, you agree to be contacted by Greenway Health about Clinical Assist. We will not share your information.</p>
+          </form>
+
+          <div id="form-thanks" hidden>
+            <h3 style="margin-top: 0;">Thank you. We will be in touch within one business day.</h3>
+            <p style="font-family: var(--sans); font-size: 14px; color: var(--text); line-height: 1.6; margin: 0;">
+              In the meantime, <a href="#video" class="text-link">watch the 90-second demo &rarr;</a>
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule" />
+
+<!-- TIME VISUALIZATION -->
+<section class="time-section" aria-labelledby="time-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="figure-eyebrow">Figure 01</p>
+      <h2 id="time-title" class="h2">The day, redrawn.</h2>
+      <p class="caption">How Clinical Assist redistributes the documentation burden in a typical 9-hour ambulatory day.</p>
+    </div>
+
+    <div class="time-viz" id="time-viz">
+      <div class="timeline-block">
+        <div class="timeline-label">
+          <span>Today</span>
+          <span class="label-rule"></span>
+        </div>
+        <svg class="timeline-svg" viewBox="0 0 1080 64" preserveAspectRatio="none" role="img" aria-label="Today, the day alternates between visits and documentation blocks across 9 hours">
+          <!-- 9 hours = 540 minutes; scale 1 min = 2px to fill 1080. 7 visits at 60min and 7 doc at 8min = (7*60)+(7*8)=476 — pad with extra rest. We'll do 14 visits 30min + 14 doc 8min = 532, plus pad 8. -->
+          <!-- Pattern: visit 30min (60px) + doc 8min (16px), repeated. -->
+          <g id="today-blocks"></g>
+        </svg>
+      </div>
+
+      <div class="timeline-block">
+        <div class="timeline-label">
+          <span>With Clinical Assist</span>
+          <span class="label-rule"></span>
+        </div>
+        <svg class="timeline-svg" viewBox="0 0 1080 64" preserveAspectRatio="none" role="img" aria-label="With Clinical Assist, documentation shrinks to slivers and 2.5 hours are reclaimed">
+          <g id="with-blocks"></g>
+        </svg>
+      </div>
+
+      <div class="legend" aria-hidden="true">
+        <span><span class="swatch swatch-visit"></span>Patient visit</span>
+        <span><span class="swatch swatch-doc"></span>Documentation</span>
+        <span><span class="swatch swatch-reclaim"></span>Reclaimed time</span>
+      </div>
+    </div>
+
+    <div class="time-text-grid">
+      <div>
+        <p class="insight-pull">
+          Most ambient scribes drop a transcript in your inbox after the visit. Clinical Assist drafts the structured note in the moment, suggests ICD-10 and E/M codes, and pre-fills prior authorization narrative, so the documentation block disappears, not just delays.
+        </p>
+      </div>
+      <div>
+        <div class="workflow-rows">
+          <div class="workflow-row">
+            <span class="small-caps">Notes drafted</span>
+            <span class="row-value">Real time, structured</span>
+          </div>
+          <div class="workflow-row">
+            <span class="small-caps">Coding</span>
+            <span class="row-value">ICD-10 + E/M suggested</span>
+          </div>
+          <div class="workflow-row">
+            <span class="small-caps">Prior auth</span>
+            <span class="row-value">Pre-filled from visit narrative</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule" />
+
+<!-- ROI CALCULATOR -->
+<section class="roi-section" aria-labelledby="roi-title">
+  <div class="container">
+    <div class="roi-wrap">
+      <div class="section-head">
+        <p class="figure-eyebrow">Figure 02</p>
+        <h2 id="roi-title" class="h2">What 2.5 hours per provider unlocks.</h2>
+        <p class="caption">Adjust the inputs to model your practice. Dollar value uses a $250/hr opportunity-cost benchmark.</p>
+      </div>
+
+      <div class="roi-panel">
+        <div class="roi-inputs" role="group" aria-label="Practice inputs">
+          <div class="roi-input-row">
+            <label class="small-caps" for="r-providers">Providers</label>
+            <div class="stepper">
+              <button type="button" data-step="-1" data-target="r-providers" aria-label="Decrease providers">&minus;</button>
+              <input id="r-providers" type="number" value="8" min="1" max="999" inputmode="numeric">
+              <button type="button" data-step="1" data-target="r-providers" aria-label="Increase providers">+</button>
+            </div>
+            <span class="roi-unit">clinicians</span>
+          </div>
+
+          <div class="roi-input-row">
+            <label class="small-caps" for="r-visits">Visits per provider per day</label>
+            <div class="stepper">
+              <button type="button" data-step="-1" data-target="r-visits" aria-label="Decrease visits per day">&minus;</button>
+              <input id="r-visits" type="number" value="22" min="1" max="200" inputmode="numeric">
+              <button type="button" data-step="1" data-target="r-visits" aria-label="Increase visits per day">+</button>
+            </div>
+            <span class="roi-unit">per day</span>
+          </div>
+
+          <div class="roi-input-row">
+            <label class="small-caps" for="r-minutes">Minutes saved per visit</label>
+            <div class="stepper">
+              <button type="button" data-step="-1" data-target="r-minutes" aria-label="Decrease minutes saved">&minus;</button>
+              <input id="r-minutes" type="number" value="4" min="1" max="60" inputmode="numeric">
+              <button type="button" data-step="1" data-target="r-minutes" aria-label="Increase minutes saved">+</button>
+            </div>
+            <span class="roi-unit">per visit</span>
+          </div>
+        </div>
+
+        <div class="roi-results">
+          <div class="roi-result">
+            <span class="small-caps">Hours / week</span>
+            <span class="big-num" id="roi-week">0</span>
+            <span class="roi-unit-line">reclaimed</span>
+          </div>
+          <div class="roi-result">
+            <span class="small-caps">Hours / year</span>
+            <span class="big-num" id="roi-year">0</span>
+            <span class="roi-unit-line">reclaimed</span>
+          </div>
+          <div class="roi-result">
+            <span class="small-caps">Dollar value</span>
+            <span class="big-num" id="roi-dollars">$0</span>
+            <span class="roi-unit-line">at $250 / hour</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="roi-disclaimer">
+        Modeled on five-day work weeks, 50 working weeks per year. Opportunity-cost benchmark reflects an industry-standard physician hourly rate; substitute your own rate to refine. Actual results vary by specialty, encounter mix, and adoption rate.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule" />
+
+<!-- ADJACENT THEMES -->
+<section class="themes-section" aria-labelledby="themes-title">
+  <div class="container">
+    <div class="themes-head">
+      <h2 id="themes-title" class="h2">And there is more in the suite.</h2>
+      <p class="deck">Each capability built for ambulatory specialty practices, sharing the same data layer.</p>
+    </div>
+
+    <div class="themes-grid">
+      <article class="theme">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 6 L20 6 M4 12 L14 12 M4 18 L18 18"></path>
+          <circle cx="20" cy="12" r="2.5"></circle>
+        </svg>
+        <h3>Prior authorization automation</h3>
+        <p>Pull the visit narrative, payer rules, and clinical history into a complete prior-auth packet in under two minutes.</p>
+        <a href="#">See how &rarr;</a>
+      </article>
+
+      <article class="theme">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 12 L9 6 L15 12 L21 6"></path>
+          <path d="M3 18 L9 12 L15 18 L21 12"></path>
+        </svg>
+        <h3>Intelligent HCC coding</h3>
+        <p>Surface uncoded HCC opportunities from the chart and the encounter, with audit-ready evidence.</p>
+        <a href="#">See how &rarr;</a>
+      </article>
+
+      <article class="theme">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="0"></rect>
+          <path d="M8 10 L16 10 M8 14 L13 14"></path>
+        </svg>
+        <h3>Patient portal</h3>
+        <p>Modern self-service for messaging, scheduling, billing, and forms, branded for your practice.</p>
+        <a href="#">See how &rarr;</a>
+      </article>
+
+      <article class="theme">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 8 L21 8 L21 18 L3 18 Z"></path>
+          <circle cx="12" cy="13" r="2.5"></circle>
+          <path d="M9 4 L15 4"></path>
+        </svg>
+        <h3>Telehealth integration</h3>
+        <p>HD video visits embedded inside Intergy and Prime Suite, with notes auto-attached to the encounter.</p>
+        <a href="#">See how &rarr;</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule" />
+
+<!-- PULL QUOTE -->
+<section class="quote-section" aria-label="Customer quote">
+  <div class="container">
+    <figure class="quote-wrap">
+      <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+      <blockquote>
+        <p class="quote-text">Clinical Assist gave my providers their afternoons back. We added 14% more visits per week without adding staff, and our after-hours charting time dropped to nearly zero.</p>
+      </blockquote>
+      <div class="quote-attr-rule"></div>
+      <figcaption class="quote-attr">[Real customer quote and attribution to be supplied by Greenway]</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- FINAL CTA BAND -->
+<section class="cta-band" aria-labelledby="cta-title">
+  <div class="container">
+    <div class="cta-wrap">
+      <h2 id="cta-title" class="h2">Ready to give your clinicians their day back?</h2>
+      <p class="deck">See Clinical Assist in your specialty. Most demos take 25 minutes.</p>
+      <a href="#demo-form" class="btn btn-onink">Request your demo</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <a href="#" class="wordmark" aria-label="Greenway Health">greenway<span class="dot">.</span></a>
+      <p class="footer-desc">Practice management, EHR, and patient engagement, built for ambulatory specialty practices.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="#">Primary Care</a></li>
+          <li><a href="#">Cardiology</a></li>
+          <li><a href="#">OB/GYN</a></li>
+          <li><a href="#">Multi-specialty</a></li>
+          <li><a href="#">Behavioral Health</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#">Intergy</a></li>
+          <li><a href="#">Prime Suite</a></li>
+          <li><a href="#">Clinical Assist</a></li>
+          <li><a href="#">Patient Portal</a></li>
+          <li><a href="#">Revenue Services</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Leadership</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Knowledge base</a></li>
+          <li><a href="#">Webinars</a></li>
+          <li><a href="#">Customer stories</a></li>
+          <li><a href="#">White papers</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="copy">&copy; 2026 Greenway Health, LLC. All rights reserved.</p>
+      <div class="legal-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Hero stagger reveal ---------- */
+  document.querySelectorAll('.anim-in').forEach(function(el){
+    var d = parseInt(el.getAttribute('data-stagger') || '0', 10) * 80;
+    if (prefersReduced) { el.classList.add('is-in'); return; }
+    setTimeout(function(){ el.classList.add('is-in'); }, 120 + d);
+  });
+
+  /* ---------- Build timeline SVGs ---------- */
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  var todayG = document.getElementById('today-blocks');
+  var withG  = document.getElementById('with-blocks');
+
+  // Total scale: 540 minutes (9h) -> width 1080 (2px / min). With Clinical Assist reclaims 150 min.
+  // Pattern: 14 cycles of (visit 30min + doc 8min) = 14*(60+16) = 1064 + small pad.
+  var INK = '#1B2538';
+  var ACCENT = '#0CAB7D';
+
+  function rect(parent, x, w, h, fill, opacity, y, dataAttrs){
+    var r = document.createElementNS(SVG_NS, 'rect');
+    r.setAttribute('x', x);
+    r.setAttribute('y', y || 0);
+    r.setAttribute('width', w);
+    r.setAttribute('height', h);
+    r.setAttribute('fill', fill);
+    if (opacity != null) r.setAttribute('fill-opacity', opacity);
+    if (dataAttrs) {
+      for (var k in dataAttrs) r.setAttribute(k, dataAttrs[k]);
+    }
+    parent.appendChild(r);
+    return r;
+  }
+
+  // Build "Today" timeline
+  var x = 0;
+  var visitW = 60; // 30 min
+  var docW   = 16; // 8 min
+  for (var i = 0; i < 14; i++) {
+    rect(todayG, x, visitW, 64, INK, 1);
+    x += visitW;
+    rect(todayG, x, docW, 64, ACCENT, 0.25);
+    x += docW;
+  }
+  // Pad to 1080
+  if (x < 1080) {
+    rect(todayG, x, 1080 - x, 64, INK, 1);
+  }
+
+  // Build "With Clinical Assist" timeline:
+  // Same visits, doc shrunk to 2px slivers (1 min), reclaimed time at right.
+  var x2 = 0;
+  var docNarrow = 2;
+  var docFinal = []; // store rects to animate width on
+  for (var j = 0; j < 14; j++) {
+    rect(withG, x2, visitW, 64, INK, 1);
+    x2 += visitW;
+    // Start at original 16, shrink to 2 on animate
+    var docRect = rect(withG, x2, docW, 64, ACCENT, 1, 0, {'data-doc':'1','data-fromW':docW,'data-toW':docNarrow});
+    docFinal.push({el: docRect, x: x2});
+    x2 += docW;
+  }
+  // After shrinking, reclaimed = (14 * (16 - 2)) = 196 px = 98 min. Plus end pad.
+  // We want a clean "150 min reclaim" block. Total saved width if all docs shrink: 14*14 = 196. End remainder if any: 1080 - x2.
+  var endRemainder = 1080 - x2; // small
+  // Reclaim block: starts collapsed (width 0) at the right, grows to (196 + endRemainder).
+  var reclaimStartX = 1080;
+  var reclaimFinalW = 196 + Math.max(0, endRemainder);
+  var reclaimRect = rect(withG, reclaimStartX, 0, 64, ACCENT, 1, 0, {'data-reclaim':'1','data-fromW':0,'data-toW':reclaimFinalW});
+  // Label inside reclaim block
+  var reclaimLabel = document.createElementNS(SVG_NS, 'text');
+  reclaimLabel.setAttribute('x', 1080);
+  reclaimLabel.setAttribute('y', 38);
+  reclaimLabel.setAttribute('fill', '#FFFFFF');
+  reclaimLabel.setAttribute('font-family', "'Inter', sans-serif");
+  reclaimLabel.setAttribute('font-size', '12');
+  reclaimLabel.setAttribute('font-weight', '500');
+  reclaimLabel.setAttribute('text-anchor', 'end');
+  reclaimLabel.setAttribute('opacity', '0');
+  reclaimLabel.setAttribute('letter-spacing', '0.08em');
+  reclaimLabel.textContent = '2.5 HOURS BACK';
+  reclaimLabel.setAttribute('data-reclaim-label','1');
+  withG.appendChild(reclaimLabel);
+
+  /* ---------- Animate timeline on scroll into view ---------- */
+  function animateTimeline() {
+    if (prefersReduced) {
+      // Snap to final state
+      docFinal.forEach(function(d){
+        var to = parseFloat(d.el.getAttribute('data-toW'));
+        d.el.setAttribute('width', to);
+      });
+      reclaimRect.setAttribute('x', 1080 - reclaimFinalW);
+      reclaimRect.setAttribute('width', reclaimFinalW);
+      reclaimLabel.setAttribute('x', 1080 - 12);
+      reclaimLabel.setAttribute('opacity', '1');
+      return;
+    }
+    var duration = 1200;
+    var start = performance.now();
+    function ease(t){ return 1 - Math.pow(1 - t, 3); } // easeOutCubic
+    function frame(now){
+      var t = Math.min(1, (now - start) / duration);
+      var e = ease(t);
+      docFinal.forEach(function(d){
+        var from = parseFloat(d.el.getAttribute('data-fromW'));
+        var to = parseFloat(d.el.getAttribute('data-toW'));
+        var w = from + (to - from) * e;
+        d.el.setAttribute('width', w);
+      });
+      var w2 = reclaimFinalW * e;
+      reclaimRect.setAttribute('x', 1080 - w2);
+      reclaimRect.setAttribute('width', w2);
+      reclaimLabel.setAttribute('x', 1080 - 12);
+      reclaimLabel.setAttribute('opacity', e);
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting) {
+          animateTimeline();
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(document.getElementById('time-viz'));
+  } else {
+    animateTimeline();
+  }
+
+  /* ---------- ROI calculator ---------- */
+  var rProviders = document.getElementById('r-providers');
+  var rVisits    = document.getElementById('r-visits');
+  var rMinutes   = document.getElementById('r-minutes');
+  var outWeek    = document.getElementById('roi-week');
+  var outYear    = document.getElementById('roi-year');
+  var outDollars = document.getElementById('roi-dollars');
+
+  var lastWeek = 0, lastYear = 0, lastDollars = 0;
+
+  function fmt(n){ return n.toLocaleString('en-US', { maximumFractionDigits: 0 }); }
+  function fmtCurrency(n){ return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 }); }
+
+  function computeROI(){
+    var p = Math.max(0, parseInt(rProviders.value, 10) || 0);
+    var v = Math.max(0, parseInt(rVisits.value, 10) || 0);
+    var m = Math.max(0, parseInt(rMinutes.value, 10) || 0);
+    var minPerWeek = p * v * m * 5;            // 5 working days
+    var hoursWeek  = minPerWeek / 60;
+    var hoursYear  = hoursWeek * 50;           // 50 working weeks
+    var dollars    = Math.round(hoursYear * 250);
+    return { hoursWeek: Math.round(hoursWeek), hoursYear: Math.round(hoursYear), dollars: dollars };
+  }
+
+  function animateNumber(from, to, dur, set){
+    if (prefersReduced) { set(to); return; }
+    var start = performance.now();
+    function ease(t){ return 1 - Math.pow(1 - t, 3); }
+    function step(now){
+      var t = Math.min(1, (now - start) / dur);
+      var v = from + (to - from) * ease(t);
+      set(v);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function updateROI(){
+    var r = computeROI();
+    animateNumber(lastWeek, r.hoursWeek, 800, function(v){ outWeek.textContent = fmt(v); });
+    animateNumber(lastYear, r.hoursYear, 800, function(v){ outYear.textContent = fmt(v); });
+    animateNumber(lastDollars, r.dollars, 800, function(v){ outDollars.textContent = fmtCurrency(v); });
+    lastWeek = r.hoursWeek; lastYear = r.hoursYear; lastDollars = r.dollars;
+  }
+
+  // Steppers
+  document.querySelectorAll('.stepper button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var t = document.getElementById(btn.getAttribute('data-target'));
+      var step = parseInt(btn.getAttribute('data-step'), 10);
+      var min = parseInt(t.getAttribute('min') || '0', 10);
+      var max = parseInt(t.getAttribute('max') || '999999', 10);
+      var v = (parseInt(t.value, 10) || 0) + step;
+      if (v < min) v = min;
+      if (v > max) v = max;
+      t.value = v;
+      updateROI();
+    });
+  });
+  [rProviders, rVisits, rMinutes].forEach(function(el){
+    el.addEventListener('input', updateROI);
+    el.addEventListener('change', updateROI);
+  });
+  // Initial calc (no animation)
+  (function init(){
+    var r = computeROI();
+    outWeek.textContent = fmt(r.hoursWeek);
+    outYear.textContent = fmt(r.hoursYear);
+    outDollars.textContent = fmtCurrency(r.dollars);
+    lastWeek = r.hoursWeek; lastYear = r.hoursYear; lastDollars = r.dollars;
+  })();
+
+  /* ---------- Form submit ---------- */
+  var form = document.getElementById('lead-form');
+  var thanks = document.getElementById('form-thanks');
+  if (form) {
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      // CONVERSION PLACEHOLDER: gtag('event','conversion',{send_to:'AW-XXXX/yyyy'});
+      // CONVERSION PLACEHOLDER: lintrk('track', { conversion_id: xxxxxxx });
+      form.setAttribute('hidden', '');
+      thanks.removeAttribute('hidden');
+      thanks.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'center' });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
