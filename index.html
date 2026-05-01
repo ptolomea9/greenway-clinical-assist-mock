@@ -337,34 +337,144 @@
   .section-head .h2 { font-size: clamp(40px, 5vw, 56px); margin-bottom: 24px; }
   .section-head .caption { max-width: 640px; }
 
-  /* Time visualization */
+  /* Time visualization — scroll-driven morph */
   .time-section { background: var(--paper); }
-  .time-viz {
-    margin: 64px 0 80px;
+
+  /* Section becomes tall to allow scroll-locked transformation */
+  .time-section[data-scroll-section] {
+    --p: 0;
+    min-height: 220vh;
+    padding: 96px 0 0;
+    position: relative;
   }
-  .timeline-block { margin-bottom: 64px; }
-  .timeline-block:last-child { margin-bottom: 0; }
+
+  /* Section header sits at top, normal flow */
+  .time-section .section-head { margin-bottom: 0; }
+
+  /* Sticky stage holds the morphing timeline centered as user scrolls past */
+  .time-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 0;
+  }
+
+  .time-viz {
+    margin: 0;
+  }
+
+  /* Counter line above the label */
+  .time-counter {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    letter-spacing: 0.005em;
+    min-height: 1.5em;
+  }
+  .time-counter .reclaimed-chunk {
+    color: var(--accent);
+    opacity: calc(var(--p, 0));
+    transition: opacity 120ms linear;
+  }
+  .time-counter .sep {
+    display: inline-block;
+    margin: 0 10px;
+    color: rgba(27, 37, 56, 0.35);
+    opacity: calc(var(--p, 0));
+  }
+
+  /* Stacked labels — crossfade */
+  .timeline-labels {
+    position: relative;
+    height: 28px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+  }
   .timeline-label {
+    position: absolute;
+    inset: 0;
     font-family: var(--sans);
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--ink);
-    margin-bottom: 12px;
-    padding-bottom: 12px;
     display: flex; align-items: center; gap: 16px;
+    pointer-events: none;
   }
   .timeline-label .label-rule {
     flex: 1;
     height: 1px;
     background: var(--rule);
   }
+  /* Crossfade driven by --p: TODAY visible 0–0.5, WITH CA visible 0.5–1 */
+  .label-today    { opacity: calc(1 - clamp(0, (var(--p, 0) - 0.4) * 5, 1)); }
+  .label-with-ca  { opacity: clamp(0, (var(--p, 0) - 0.5) * 5, 1); }
+
   .timeline-svg {
     width: 100%;
     height: 64px;
     display: block;
   }
+
+  /* Hairline rule beneath the timeline */
+  .timeline-rule {
+    height: 1px;
+    background: var(--rule);
+    margin: 0;
+    border: 0;
+  }
+
+  /* Time-of-day axis */
+  .time-axis {
+    position: relative;
+    margin-top: 10px;
+    height: 18px;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(54, 55, 73, 0.55);
+  }
+  .time-axis-start { position: absolute; left: 0; top: 0; }
+  .time-axis-end   { position: absolute; right: 0; top: 0; }
+  .time-axis-ticks {
+    position: absolute;
+    left: 0; right: 0;
+    top: -10px;
+    height: 4px;
+    pointer-events: none;
+  }
+  .time-axis-tick {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 4px;
+    background: var(--rule);
+  }
+
+  /* Caption at the bottom of the sticky stage — appears at the end */
+  .time-end-caption {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text);
+    margin: 24px 0 0 0;
+    text-align: left;
+    opacity: clamp(0, (var(--p, 0) - 0.85) * 6, 1);
+    transition: opacity 120ms linear;
+  }
+
   .legend {
     display: flex; flex-wrap: wrap;
     gap: 16px 32px;
@@ -386,11 +496,27 @@
   .swatch-doc { background: var(--accent); opacity: 0.25; }
   .swatch-reclaim { background: var(--accent); }
 
+  /* Reduced-motion fallback: release the scroll lock, snap to final state */
+  @media (prefers-reduced-motion: reduce) {
+    .time-section[data-scroll-section] {
+      min-height: 0;
+      padding: 96px 0;
+      --p: 1;
+    }
+    .time-stage {
+      position: static;
+      height: auto;
+      padding: 48px 0 0;
+    }
+  }
+
   .time-text-grid {
     display: grid;
     grid-template-columns: 7fr 5fr;
     gap: 64px;
-    margin-top: 80px;
+    margin-top: 0;
+    padding-top: 64px;
+    padding-bottom: 96px;
     align-items: start;
   }
   .insight-pull {
@@ -761,6 +887,18 @@
   }
 
   /* Responsive */
+  @media (max-width: 768px) {
+    /* Disable scroll-lock on mobile — one-shot play in normal flow */
+    .time-section[data-scroll-section] {
+      min-height: 0;
+      padding: 64px 0;
+    }
+    .time-stage {
+      position: static;
+      height: auto;
+      padding: 24px 0 0;
+    }
+  }
   @media (max-width: 960px) {
     section { padding: 64px 0; }
     .hero { padding: 48px 0 64px; }
@@ -896,7 +1034,7 @@
 <hr class="section-rule" />
 
 <!-- TIME VISUALIZATION -->
-<section class="time-section" aria-labelledby="time-title">
+<section class="time-section" data-scroll-section aria-labelledby="time-title">
   <div class="container">
     <div class="section-head">
       <p class="figure-eyebrow">Figure 01</p>
@@ -904,33 +1042,42 @@
       <p class="caption">How Clinical Assist redistributes the documentation burden in a typical 9-hour ambulatory day.</p>
     </div>
 
-    <div class="time-viz" id="time-viz">
-      <div class="timeline-block">
-        <div class="timeline-label">
-          <span>Today</span>
-          <span class="label-rule"></span>
-        </div>
-        <svg class="timeline-svg" viewBox="0 0 1080 64" preserveAspectRatio="none" role="img" aria-label="Today, the day alternates between visits and documentation blocks across 9 hours">
-          <!-- 9 hours = 540 minutes; scale 1 min = 2px to fill 1080. 7 visits at 60min and 7 doc at 8min = (7*60)+(7*8)=476 — pad with extra rest. We'll do 14 visits 30min + 14 doc 8min = 532, plus pad 8. -->
-          <!-- Pattern: visit 30min (60px) + doc 8min (16px), repeated. -->
-          <g id="today-blocks"></g>
-        </svg>
-      </div>
+    <div class="time-stage">
+      <div class="time-viz" id="time-viz">
+        <p class="time-counter" id="time-counter" aria-live="polite">
+          Documentation: <span id="counter-doc">4&nbsp;hr&nbsp;24&nbsp;min</span> per&nbsp;day<span class="sep">&middot;</span><span class="reclaimed-chunk">Reclaimed: <span id="counter-rec">0&nbsp;min</span></span>
+        </p>
 
-      <div class="timeline-block">
-        <div class="timeline-label">
-          <span>With Clinical Assist</span>
-          <span class="label-rule"></span>
+        <div class="timeline-labels">
+          <div class="timeline-label label-today">
+            <span>Today</span>
+            <span class="label-rule"></span>
+          </div>
+          <div class="timeline-label label-with-ca">
+            <span>With Clinical Assist</span>
+            <span class="label-rule"></span>
+          </div>
         </div>
-        <svg class="timeline-svg" viewBox="0 0 1080 64" preserveAspectRatio="none" role="img" aria-label="With Clinical Assist, documentation shrinks to slivers and 2.5 hours are reclaimed">
-          <g id="with-blocks"></g>
-        </svg>
-      </div>
 
-      <div class="legend" aria-hidden="true">
-        <span><span class="swatch swatch-visit"></span>Patient visit</span>
-        <span><span class="swatch swatch-doc"></span>Documentation</span>
-        <span><span class="swatch swatch-reclaim"></span>Reclaimed time</span>
+        <svg class="timeline-svg" id="morph-svg" viewBox="0 0 1080 64" preserveAspectRatio="none" role="img" aria-label="A 9-hour clinical day. As you scroll, documentation blocks compress and reclaimed time grows.">
+          <g id="morph-blocks"></g>
+        </svg>
+
+        <hr class="timeline-rule" />
+
+        <div class="time-axis" aria-hidden="true">
+          <div class="time-axis-ticks" id="time-axis-ticks"></div>
+          <span class="time-axis-start">9 AM</span>
+          <span class="time-axis-end">6 PM</span>
+        </div>
+
+        <p class="time-end-caption">Per provider, every clinic day.</p>
+
+        <div class="legend" aria-hidden="true">
+          <span><span class="swatch swatch-visit"></span>Patient visit</span>
+          <span><span class="swatch swatch-doc"></span>Documentation</span>
+          <span><span class="swatch swatch-reclaim"></span>Reclaimed time</span>
+        </div>
       </div>
     </div>
 
@@ -1188,129 +1335,196 @@
     setTimeout(function(){ el.classList.add('is-in'); }, 120 + d);
   });
 
-  /* ---------- Build timeline SVGs ---------- */
+  /* ---------- Build morphing timeline (scroll-driven) ---------- */
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  var todayG = document.getElementById('today-blocks');
-  var withG  = document.getElementById('with-blocks');
+  var morphG = document.getElementById('morph-blocks');
+  var morphSvg = document.getElementById('morph-svg');
+  var section = document.querySelector('[data-scroll-section]');
+  var counterDoc = document.getElementById('counter-doc');
+  var counterRec = document.getElementById('counter-rec');
+  var axisTicks  = document.getElementById('time-axis-ticks');
 
-  // Total scale: 540 minutes (9h) -> width 1080 (2px / min). With Clinical Assist reclaims 150 min.
-  // Pattern: 14 cycles of (visit 30min + doc 8min) = 14*(60+16) = 1064 + small pad.
   var INK = '#1B2538';
   var ACCENT = '#0CAB7D';
 
-  function rect(parent, x, w, h, fill, opacity, y, dataAttrs){
+  // 9 hours -> viewBox width 1080 (1 min = 2px). Day has 9 visits @ 36 min + 9 docs @ 22 min = 522 min, leaves 18 min slack.
+  // We'll do 9 visits at 36min (72px) + 9 docs at 22min (44px) = (72+44)*9 = 1044, plus 36px tail visit pad to 1080.
+  // Doc minutes total: 9 * 22 = 198 min = 3h 18m today. To match "4 hr 24 min" copy we treat doc + slack admin = 264 min.
+  // Simpler approach: distribute "docW" across 8 doc blocks; total doc minutes today = 264 (4h24m), saved at progress=1 = 150min (2h30m), leaving 114 min doc.
+  var TOTAL_MIN = 540;        // 9 hours
+  var DOC_TODAY_MIN = 264;    // 4 hr 24 min
+  var DOC_FINAL_MIN = 60;     // 1 hr at end state
+  var RECLAIM_MIN = 150;      // 2.5 hours
+  // visits use the remaining minutes: 540 - 264 = 276 min today ; same visit minutes after morph (visits are anchored).
+  var VISIT_MIN_TOTAL = TOTAL_MIN - DOC_TODAY_MIN; // 276 min total visits
+
+  // Use 8 visit blocks alternating with 8 doc blocks, ending on a small final visit (no trailing doc).
+  // visit min each = 276 / 8 = 34.5 min  -> 69px
+  // doc min each (today) = 264 / 8 = 33 min -> 66px
+  // doc min each (final) = 60 / 8 = 7.5 min -> 15px
+  var N = 8;
+  var visitMin = VISIT_MIN_TOTAL / N;       // 34.5
+  var docTodayMin = DOC_TODAY_MIN / N;      // 33
+  var docFinalMin = DOC_FINAL_MIN / N;      // 7.5
+  var minToPx = 1080 / TOTAL_MIN;           // 2 px per min
+
+  var visitPx     = visitMin * minToPx;     // 69
+  var docTodayPx  = docTodayMin * minToPx;  // 66
+  var docFinalPx  = docFinalMin * minToPx;  // 15
+
+  function rect(parent, attrs){
     var r = document.createElementNS(SVG_NS, 'rect');
-    r.setAttribute('x', x);
-    r.setAttribute('y', y || 0);
-    r.setAttribute('width', w);
-    r.setAttribute('height', h);
-    r.setAttribute('fill', fill);
-    if (opacity != null) r.setAttribute('fill-opacity', opacity);
-    if (dataAttrs) {
-      for (var k in dataAttrs) r.setAttribute(k, dataAttrs[k]);
-    }
+    for (var k in attrs) r.setAttribute(k, attrs[k]);
     parent.appendChild(r);
     return r;
   }
 
-  // Build "Today" timeline
+  // Build alternating visits + docs. Visit positions are anchored to TODAY layout (visits never move; docs shrink between them).
+  // We compute today positions, then dynamically reposition visits + docs as a function of progress so visits stay anchored
+  // at their "today" left edge, and docs fill the gap between consecutive visits with shrinking width.
+  // Approach: keep visit X anchored at today-positions; doc width interpolates docTodayPx -> docFinalPx; reclaim block fills
+  // remaining space at right with width = sum of (docTodayPx - docCurrentPx) per doc.
+  var visitRects = [];
+  var docRects = [];
   var x = 0;
-  var visitW = 60; // 30 min
-  var docW   = 16; // 8 min
-  for (var i = 0; i < 14; i++) {
-    rect(todayG, x, visitW, 64, INK, 1);
-    x += visitW;
-    rect(todayG, x, docW, 64, ACCENT, 0.25);
-    x += docW;
+  for (var i = 0; i < N; i++) {
+    var vr = rect(morphG, { x: x, y: 0, width: visitPx, height: 64, fill: INK });
+    visitRects.push({ el: vr, anchorX: x });
+    x += visitPx;
+    var dr = rect(morphG, { x: x, y: 0, width: docTodayPx, height: 64, fill: ACCENT, 'fill-opacity': 0.25, 'data-doc': '1' });
+    docRects.push({ el: dr, todayX: x });
+    x += docTodayPx;
   }
-  // Pad to 1080
-  if (x < 1080) {
-    rect(todayG, x, 1080 - x, 64, INK, 1);
-  }
+  // Reclaim block at the right edge — starts width 0
+  var reclaimRect = rect(morphG, { x: 1080, y: 0, width: 0, height: 64, fill: ACCENT });
 
-  // Build "With Clinical Assist" timeline:
-  // Same visits, doc shrunk to 2px slivers (1 min), reclaimed time at right.
-  var x2 = 0;
-  var docNarrow = 2;
-  var docFinal = []; // store rects to animate width on
-  for (var j = 0; j < 14; j++) {
-    rect(withG, x2, visitW, 64, INK, 1);
-    x2 += visitW;
-    // Start at original 16, shrink to 2 on animate
-    var docRect = rect(withG, x2, docW, 64, ACCENT, 1, 0, {'data-doc':'1','data-fromW':docW,'data-toW':docNarrow});
-    docFinal.push({el: docRect, x: x2});
-    x2 += docW;
-  }
-  // After shrinking, reclaimed = (14 * (16 - 2)) = 196 px = 98 min. Plus end pad.
-  // We want a clean "150 min reclaim" block. Total saved width if all docs shrink: 14*14 = 196. End remainder if any: 1080 - x2.
-  var endRemainder = 1080 - x2; // small
-  // Reclaim block: starts collapsed (width 0) at the right, grows to (196 + endRemainder).
-  var reclaimStartX = 1080;
-  var reclaimFinalW = 196 + Math.max(0, endRemainder);
-  var reclaimRect = rect(withG, reclaimStartX, 0, 64, ACCENT, 1, 0, {'data-reclaim':'1','data-fromW':0,'data-toW':reclaimFinalW});
-  // Label inside reclaim block
+  // Reclaim label
   var reclaimLabel = document.createElementNS(SVG_NS, 'text');
   reclaimLabel.setAttribute('x', 1080);
   reclaimLabel.setAttribute('y', 38);
   reclaimLabel.setAttribute('fill', '#FFFFFF');
   reclaimLabel.setAttribute('font-family', "'Inter', sans-serif");
-  reclaimLabel.setAttribute('font-size', '12');
-  reclaimLabel.setAttribute('font-weight', '500');
-  reclaimLabel.setAttribute('text-anchor', 'end');
+  reclaimLabel.setAttribute('font-size', '11');
+  reclaimLabel.setAttribute('font-weight', '600');
+  reclaimLabel.setAttribute('text-anchor', 'middle');
   reclaimLabel.setAttribute('opacity', '0');
-  reclaimLabel.setAttribute('letter-spacing', '0.08em');
+  reclaimLabel.setAttribute('letter-spacing', '0.16em');
   reclaimLabel.textContent = '2.5 HOURS BACK';
-  reclaimLabel.setAttribute('data-reclaim-label','1');
-  withG.appendChild(reclaimLabel);
+  morphG.appendChild(reclaimLabel);
 
-  /* ---------- Animate timeline on scroll into view ---------- */
-  function animateTimeline() {
-    if (prefersReduced) {
-      // Snap to final state
-      docFinal.forEach(function(d){
-        var to = parseFloat(d.el.getAttribute('data-toW'));
-        d.el.setAttribute('width', to);
-      });
-      reclaimRect.setAttribute('x', 1080 - reclaimFinalW);
-      reclaimRect.setAttribute('width', reclaimFinalW);
-      reclaimLabel.setAttribute('x', 1080 - 12);
-      reclaimLabel.setAttribute('opacity', '1');
-      return;
+  // Build hourly tick marks under the rule (10 ticks: hours 0..9 from 9 AM to 6 PM)
+  if (axisTicks) {
+    for (var h = 0; h <= 9; h++) {
+      var tick = document.createElement('span');
+      tick.className = 'time-axis-tick';
+      tick.style.left = (h / 9 * 100) + '%';
+      axisTicks.appendChild(tick);
     }
-    var duration = 1200;
-    var start = performance.now();
-    function ease(t){ return 1 - Math.pow(1 - t, 3); } // easeOutCubic
-    function frame(now){
-      var t = Math.min(1, (now - start) / duration);
-      var e = ease(t);
-      docFinal.forEach(function(d){
-        var from = parseFloat(d.el.getAttribute('data-fromW'));
-        var to = parseFloat(d.el.getAttribute('data-toW'));
-        var w = from + (to - from) * e;
-        d.el.setAttribute('width', w);
-      });
-      var w2 = reclaimFinalW * e;
-      reclaimRect.setAttribute('x', 1080 - w2);
-      reclaimRect.setAttribute('width', w2);
-      reclaimLabel.setAttribute('x', 1080 - 12);
-      reclaimLabel.setAttribute('opacity', e);
-      if (t < 1) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
   }
 
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if (en.isIntersecting) {
-          animateTimeline();
-          io.disconnect();
-        }
-      });
-    }, { threshold: 0.4 });
-    io.observe(document.getElementById('time-viz'));
+  // Color shift for doc blocks: TODAY = pale teal (opacity 0.25); WITH CA = solid teal slivers
+  // We crossfade fill-opacity from 0.25 -> 1.0 across progress
+  function setMorph(p) {
+    p = Math.max(0, Math.min(1, p));
+    // Doc width interpolation
+    var docW = docTodayPx + (docFinalPx - docTodayPx) * p;
+    var savedPerDoc = docTodayPx - docW;
+    var docOpacity = 0.25 + (1 - 0.25) * p;
+
+    // Reposition visits + docs so visits stay anchored at todayX; docs sit immediately after each visit, shrinking width.
+    // Since doc width shrinks, the elements after each doc would shift left, but we want visits anchored. So we leave visits
+    // anchored at their TODAY positions, and shrink each doc independently. The "saved" width accumulates on the right side
+    // as the reclaim block. This means later visits have a growing GAP between them and the prior doc — we close that gap
+    // by sliding visits LEFT? No: spec says visits stay anchored.  Instead, we let doc widths shrink in place, so the gap
+    // appears between docs and the next visit. That gap remains BG (white). Finally a single reclaim block grows from right.
+    // Total saved across all docs = N * savedPerDoc. Reclaim grows from right to width N*savedPerDoc.
+    docRects.forEach(function(d){
+      d.el.setAttribute('x', d.todayX);
+      d.el.setAttribute('width', docW);
+      d.el.setAttribute('fill-opacity', docOpacity);
+    });
+
+    var reclaimW = N * savedPerDoc;
+    reclaimRect.setAttribute('x', 1080 - reclaimW);
+    reclaimRect.setAttribute('width', reclaimW);
+
+    // Reclaim label fades in over 0.6 progress
+    var labelOp = Math.max(0, Math.min(1, (p - 0.55) / 0.4));
+    reclaimLabel.setAttribute('opacity', labelOp);
+    reclaimLabel.setAttribute('x', 1080 - reclaimW / 2);
+
+    // Counter text — interpolate doc minutes from 264 -> 60, reclaimed from 0 -> 150
+    var docMinNow = DOC_TODAY_MIN + (DOC_FINAL_MIN - DOC_TODAY_MIN) * p;
+    var recMinNow = RECLAIM_MIN * p;
+    counterDoc.textContent = formatHrMin(docMinNow);
+    counterRec.textContent = formatHrMin(recMinNow);
+
+    // Update CSS custom property for opacity-driven elements (label crossfade, end caption)
+    section.style.setProperty('--p', p.toFixed(3));
+  }
+
+  function formatHrMin(totalMin){
+    var m = Math.round(totalMin);
+    var h = Math.floor(m / 60);
+    var r = m - h * 60;
+    if (h > 0 && r > 0) return h + ' hr ' + r + ' min';
+    if (h > 0 && r === 0) return h + ' hr';
+    return r + ' min';
+  }
+
+  // Detect mobile (one-shot play) vs desktop (scroll-locked)
+  var isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+  if (prefersReduced) {
+    // Snap to final state
+    setMorph(1);
+  } else if (isMobile) {
+    // One-shot play when section enters viewport
+    setMorph(0);
+    if ('IntersectionObserver' in window) {
+      var ioM = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if (en.isIntersecting) {
+            var start = performance.now();
+            var dur = 1400;
+            function ease(t){ return 1 - Math.pow(1 - t, 3); }
+            function step(now){
+              var t = Math.min(1, (now - start) / dur);
+              setMorph(ease(t));
+              if (t < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+            ioM.disconnect();
+          }
+        });
+      }, { threshold: 0.35 });
+      ioM.observe(document.getElementById('time-viz'));
+    } else {
+      setMorph(1);
+    }
   } else {
-    animateTimeline();
+    // Desktop: scroll-locked transformation
+    setMorph(0);
+    var ticking = false;
+    function onScroll(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function(){
+        var rect = section.getBoundingClientRect();
+        var vh = window.innerHeight;
+        // Progress is computed across the section's tall scroll range minus one viewport (the sticky stage holds for 1vh).
+        // Active scroll range = section.height - vh.
+        var activeRange = section.offsetHeight - vh;
+        // Scrolled past top of section, in pixels
+        var scrolled = -rect.top;
+        var p = activeRange > 0 ? scrolled / activeRange : 0;
+        setMorph(Math.max(0, Math.min(1, p)));
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
   }
 
   /* ---------- ROI calculator ---------- */
