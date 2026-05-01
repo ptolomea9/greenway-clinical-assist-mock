@@ -343,8 +343,8 @@
   /* Section becomes tall to allow scroll-locked transformation */
   .time-section[data-scroll-section] {
     --p: 0;
-    min-height: 220vh;
-    padding: 96px 0 0;
+    min-height: 160vh;
+    padding: 96px 0 96px;
     position: relative;
   }
 
@@ -516,7 +516,7 @@
     gap: 64px;
     margin-top: 0;
     padding-top: 64px;
-    padding-bottom: 96px;
+    padding-bottom: 0;
     align-items: start;
   }
   .insight-pull {
@@ -1512,12 +1512,11 @@
       requestAnimationFrame(function(){
         var rect = section.getBoundingClientRect();
         var vh = window.innerHeight;
-        // Progress is computed across the section's tall scroll range minus one viewport (the sticky stage holds for 1vh).
-        // Active scroll range = section.height - vh.
+        // Active scroll range = section.height - vh; morph completes at ~80% so sticky releases with breathing room before next block.
         var activeRange = section.offsetHeight - vh;
-        // Scrolled past top of section, in pixels
         var scrolled = -rect.top;
-        var p = activeRange > 0 ? scrolled / activeRange : 0;
+        var raw = activeRange > 0 ? scrolled / activeRange : 0;
+        var p = raw / 0.80;
         setMorph(Math.max(0, Math.min(1, p)));
         ticking = false;
       });
